@@ -32,7 +32,7 @@ app.listen(PORT, () => {
  app.post('/logout', (req, res) => {
    loginModule.logout(req.body.username)
    .then((data) => {
-    res.send("logout success")
+    res.send(data)
    })
 });
 

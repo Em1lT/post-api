@@ -26,7 +26,7 @@ login = (data) => {
     let object;
     const sql = "SELECT * FROM todo_api.users WHERE username = '"+ data.username + "' AND password = '"+data.password+"';"
 
-    console.length(sql);
+    console.log(sql);
     return new Promise((resolve, reject) => {
         con.query(sql, (err, result) => {
             if (err) {

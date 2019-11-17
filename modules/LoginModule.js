@@ -51,7 +51,11 @@ registerNewUser = (data) => {
 logout = (username) => {
     return new Promise((resolve, reject) => {
         db.logout(username).then((data) => {
-            resolve(data);
+            object = {
+                succes: true,
+                data: data
+            }
+            resolve(object);
         }).catch((err) => {
             reject(err);
         })

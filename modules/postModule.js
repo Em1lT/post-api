@@ -44,12 +44,12 @@ submitPost = (data) => {
 
     return new Promise((resolve, reject) => {
 
-        db.submit(req.body).then((data) => {
+        db.submit(data).then((data1) => {
             object = {
                 succes: true,
-                data: result
+                data: data1
             }
-            resolve(data)
+            resolve(object)
         }).catch((err) => {
             object = {
                 succes: false,

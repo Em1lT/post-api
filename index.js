@@ -25,7 +25,7 @@ app.listen(PORT, () => {
         res.send(data);
       })
       .catch((error) => {
-        res.error(data);
+        res.send(error);
       })
  });
 
@@ -45,11 +45,10 @@ app.post('/user', (req, res) => {
 });
  
 app.post('/submit', (req, res) => {
-  
   postModule.submitPost(req.body).then((data) => {
     res.send(data);
   }).catch((err) => {
-    res.error(data);
+    res.send(err);
   })
 });
 
@@ -96,10 +95,10 @@ app.get('/user/:id', (req, res) => {
 });
 
  app.post('/register', (req, res) => {
-  db.createNewUser(req.body).then((data) => {
-      res.send(data);
-    }).catch((err) => {
-      res.send(err);    
-    })
+  loginModule.registerNewUser(req.body).then((data) => {
+    res.send(data);
+  }).catch((err) => {
+    res.send(err);
+  })
 });
 

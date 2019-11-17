@@ -24,10 +24,28 @@ return new Promise((resolve, reject) => {
             })
         })
       }).catch((err) => {
-        res.send(err);    
+        reject(err);    
       })
     })
 
+}
+registerNewUser = (data) => {
+    
+    return new Promise((resolve, reject) => {
+        db.createNewUser(data).then((data) => {
+            object = {
+                succes: true,
+                data: data
+            }   
+            resolve(object)
+          }).catch((err) => {
+            object = {
+                succes: false,
+                data: err
+            }   
+              reject(object)
+          })
+    })
 }
 
 logout = (username) => {
@@ -41,5 +59,6 @@ logout = (username) => {
 }
 module.exports = {
     login: login,
-    logout: logout
+    logout: logout,
+    registerNewUser: registerNewUser
 }

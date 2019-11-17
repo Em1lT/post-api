@@ -55,6 +55,7 @@ submitPost = (data) => {
                 succes: false,
                 data: err
             }
+            reject(err);
         })
     })
 }

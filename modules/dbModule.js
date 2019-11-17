@@ -26,6 +26,7 @@ login = (data) => {
     let object;
     const sql = "SELECT * FROM todo_api.users WHERE username = '"+ data.username + "' AND password = '"+data.password+"';"
 
+    console.length(sql);
     return new Promise((resolve, reject) => {
         con.query(sql, (err, result) => {
             if (err) {
@@ -54,7 +55,6 @@ saveCookieToDb = (username, cookie) => {
             if(err){
                 reject(err)
             }
-            console.log(result);
             resolve();
         })
     })
@@ -63,10 +63,7 @@ saveCookieToDb = (username, cookie) => {
 userWithCookie = (data) => {
     const sql = "SELECT * FROM todo_api.users WHERE username = '" + data.username+"' AND cookie ='"+data.cookie+"'";
    
-    console.log(data.username);
-        console.log(data.cookie);
-        console.log(sql);
-
+    console.log(sql);
     return new Promise((resolve, reject) => {
         con.query(sql, (err, result) => {
             if (err) reject(err);
@@ -74,8 +71,8 @@ userWithCookie = (data) => {
                 object = {
                     succes: true,
                     data: result
-                }
-                resolve(result);
+                }            
+                resolve(object);
             } else {
                 object = {
                     succes: false,
@@ -147,7 +144,6 @@ checkIfUserExists = (data) => {
                     succes: true,
                     data: result[0].userId
                 }
-                console.log(object.succes);
                 resolve(object);
             })
         })
@@ -163,7 +159,6 @@ createuserupdate = (data) => {
         con.query(sql, (err, result) => {
             if (err) {
                 reject(err);
-                console.log(err);
             }
             resolve();
         })
@@ -187,13 +182,15 @@ updateTimeStamp = (username) => {
 
 submit = (data) => {
     return new Promise((resolve, reject) => {
-        
+    
         userWithCookie(data).then((user) => {
-            createNewPost(user[0], data.post)
+
+            createNewPost(user.data[0], data.post)
             .then((obj) => {
                 resolve(obj);
             })
         }).catch((err) => {
+            console.log("catch")
             reject(err);
         })    
     })
@@ -204,6 +201,7 @@ createNewPost = (user, post) => {
     let object;
 
     const sql = "INSERT INTO todo_api.posts (userid, createdAt, likes, message) VALUES ('" + user.idUsers + "', NOW(), 0, '"+post.message+"')";
+    console.log(sql)
     return new Promise((resolve, reject) => {
         con.query(sql, (err, result) => {
             if (err) reject(err);
@@ -241,11 +239,11 @@ listUsers = () => {
 listPosts = () => {
     const sql = "SELECT * FROM todo_api.posts";
 
+    console.log(sql);
     return new Promise((resolve, reject) => {
         con.query(sql, (err, result) => {
             if (err) reject(err);
    
-            console.log(result);
             resolve(result);
         })
     })
@@ -258,7 +256,6 @@ getSinglePost = (id) => {
         con.query(sql, (err, result) => {
             if (err) reject(err);
    
-            console.log(result);
             resolve(result);
         })
     })
@@ -271,7 +268,6 @@ getSingleUser = (id) => {
         con.query(sql, (err, result) => {
             if (err) reject(err);
    
-            console.log(result);
             resolve(result);
         })
     })

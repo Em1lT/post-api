@@ -43,8 +43,9 @@ deletePost = (id) => {
 submitPost = (data) => {
 
     return new Promise((resolve, reject) => {
+    db.userWithCookie(data).then((user) => {
 
-        db.submit(data).then((data1) => {
+        db.submit(user.data[0], data.post).then((data1) => {
             object = {
                 succes: true,
                 data: data1
@@ -57,6 +58,9 @@ submitPost = (data) => {
             }
             reject(err);
         })
+    }).catch((err) => {
+        reject(err);
+    })    
     })
 }
 //getSinglePost

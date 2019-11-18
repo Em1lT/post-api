@@ -180,21 +180,13 @@ updateTimeStamp = (username) => {
     })
 }
 
-submit = (data) => {
+submit = (data, post) => {
     return new Promise((resolve, reject) => {
-    
-        userWithCookie(data).then((user) => {
-
-            createNewPost(user.data[0], data.post)
-            .then((obj) => {
+        createNewPost(data, post)
+        .then((obj) => {
                 resolve(obj);
             })
-        }).catch((err) => {
-            console.log("catch")
-            reject(err);
-        })    
     })
-    
 }
 
 createNewPost = (user, post) => {

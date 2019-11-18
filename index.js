@@ -25,6 +25,7 @@ app.listen(PORT, () => {
         res.send(data);
       })
       .catch((error) => {
+        res.status(400)
         res.send(error);
       })
  });
@@ -32,7 +33,10 @@ app.listen(PORT, () => {
  app.post('/logout', (req, res) => {
    loginModule.logout(req.body.username)
    .then((data) => {
-    res.send(data)
+      res.send(data)
+   }).catch((err) => {
+     res.status(400)
+      res.send(err)
    })
 });
 
@@ -40,6 +44,7 @@ app.post('/user', (req, res) => {
   db.userWithCookie(req.body).then((data) => {
       res.send(data);
     }).catch((err) => {
+      res.status(400)
       res.send(err);    
     })
 });

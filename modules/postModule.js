@@ -32,6 +32,7 @@ getSingleUser = (id) => {
     })
 }
 
+//NOT WORKING YET
 deletePost = (id) => {
     return new Promise((resolve, reject) => {
         db.DeletePost(id).then((data) => {

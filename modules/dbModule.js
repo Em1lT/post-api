@@ -286,6 +286,19 @@ findUserName = (username) => {
         })
     })
 }
+//UPDATE ed_names SET c_request = c_request+1 WHERE id = 'x'
+likePost = (id) => {
+    const sql = "UPDATE posts SET likes = likes+1 WHERE id = '" + id + "'";
+    console.log(sql);
+    return new Promise((resolve, reject) => {
+        con.query(sql, (err, result) => {
+            if (err){ reject(err)};
+
+            
+            resolve(result)
+        })
+    })
+}
 module.exports = {
     connect: connect,
     login: login,
@@ -293,6 +306,7 @@ module.exports = {
     submit: submit,
     listPosts: listPosts,
     listUsers: listUsers,
+    likePost: likePost,
     DeletePost: DeletePost,
     getSingleUser: getSingleUser,
     getSinglePost: getSinglePost,

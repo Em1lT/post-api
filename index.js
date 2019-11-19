@@ -99,6 +99,15 @@ app.get('/user/:id', (req, res) => {
     })
 });
 
+app.post('/post/like', (req, res) => {
+  postModule.likePost(req.body).then((data) => {
+    res.send(data);
+  }).catch((err) => {
+    res.status(400);
+    res.send(err);
+  })
+});
+
  app.post('/register', (req, res) => {
   loginModule.registerNewUser(req.body).then((data) => {
     res.send(data);

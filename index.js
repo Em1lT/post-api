@@ -108,6 +108,10 @@ app.post('/post/like', (req, res) => {
   })
 });
 
+app.post('/testFunctions', (req, res) => {
+  
+});
+
  app.post('/register', (req, res) => {
   loginModule.registerNewUser(req.body).then((data) => {
     res.send(data);
@@ -116,3 +120,11 @@ app.post('/post/like', (req, res) => {
   })
 });
 
+
+app.post('/delete/like', (req, res) => {
+  postModule.deleteLike(req.body).then((data) => {
+    res.send(data);
+  }).catch((err) => {
+    res.send(err);
+  })
+});

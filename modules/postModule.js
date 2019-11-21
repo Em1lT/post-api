@@ -17,6 +17,7 @@ listAllPosts = () => {
 
 getSinglePost = (id) => {
     return new Promise((resolve, reject) => {
+
         db.getSinglePost(id).then((data) => {
             resolve(data);
         })
@@ -45,8 +46,7 @@ submitPost = (data) => {
 
     return new Promise((resolve, reject) => {
         db.userWithCookie(data).then((user) => {
-
-            db.submit(user.data[0], data.post).then((data1) => {
+            db.submit(user, data.post).then((data1) => {
                 object = {
                     succes: true,
                     data: data1
@@ -68,27 +68,80 @@ submitPost = (data) => {
 likePost = (data) => {
     return new Promise((resolve, reject) => {
 
-        db.userWithCookie(data).then(() => {
+        db.userWithCookie(data).then((user) => {
+            db.checkifLiked(data.userId, data.id).then((response) => {
+                if (response.length > 0) {
+                    object = {
+                        succes: false,
+                        data: "already liked"
+                    }
+                    reject(object)
+                } else {
+                    db.likePost(data.id).then((res) => {
+                        
+                        db.createLikeMark(data.userId, data.id).then((data) => {
+                            object = {
+                                succes: true,
+                                data: res
+                            }
+                            resolve(object);
 
-            db.likePost(data.id).then((res) => {
-                object = {
-                    succes: true,
-                    data: res
+                        }).catch((err) => {
+
+                            object = {
+                                succes: true,
+                                data: "error liking the picture"
+                            }
+                            reject(object);
+
+                        })
+
+                    }).catch((err) => {
+                        object = {
+                            succes: false,
+                            data: err
+                        }
+                        reject(object)
+                    });
+
                 }
-                resolve(object);
-                
+
             }).catch((err) => {
-                object = {
-                    succes: false,
-                    data: err
-                }
-                reject(object)
-            });
+                res.status(400);
+                res.send(err);
+            })
         }).catch((err) => {
-            reject(err);
+            console.log("dsadasdasd");
+            object = {
+                succes: false,
+                data: "no user found"
+            }
+            reject(object);
         });
     })
+}
 
+deleteLike = (data) => {
+    
+    return new Promise((resolve, reject) => {
+        db.userWithCookie(data).then((user) => {
+            db.deleteLike(data.userId, data.id)
+            .then((response) => {
+                object = {
+                    succes: true,
+                    data: response
+                }
+                resolve(object)
+            })
+        }).catch((err) => {
+            object = {
+                succes: false,
+                data: err
+            }
+            reject(object)
+        })
+    })
+    
 }
 
 module.exports = {
@@ -98,5 +151,6 @@ module.exports = {
     likePost: likePost,
     getSingleUser: getSingleUser,
     submitPost: submitPost,
-    deletePost: deletePost
+    deletePost: deletePost,
+    deleteLike: deleteLike
 }

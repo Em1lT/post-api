@@ -74,18 +74,11 @@ userWithCookie = (data) => {
     return new Promise((resolve, reject) => {
         con.query(sql, (err, result) => {
             if (err) reject(err);
+
             if (result.length) {
-                object = {
-                    succes: true,
-                    data: result
-                }
-                resolve(object);
+                resolve(result);
             } else {
-                object = {
-                    succes: false,
-                    data: "no user found"
-                }
-                reject(object);
+                reject(result);
             }
         })
     })
@@ -189,7 +182,7 @@ updateTimeStamp = (username) => {
 
 submit = (data, post) => {
     return new Promise((resolve, reject) => {
-        createNewPost(data, post)
+        createNewPost(data[0], post)
             .then((obj) => {
                 resolve(obj);
             })
@@ -198,7 +191,6 @@ submit = (data, post) => {
 
 createNewPost = (user, post) => {
     let object;
-
     const sql = "INSERT INTO todo_api.posts (userid, createdAt, likes, message) VALUES ('" + user.idUsers + "', NOW(), 0, '" + post.message + "')";
     console.log(sql)
     return new Promise((resolve, reject) => {
@@ -299,6 +291,50 @@ likePost = (id) => {
         })
     })
 }
+
+checkifLiked = (userId, postId) => {
+    
+    const sql = "SELECT * FROM todo_api.likes WHERE userId = '" + userId + "' AND postId ='" + postId + "'";
+    console.log(sql);
+    return new Promise((resolve, reject) => {
+        con.query(sql, (err, result) => {
+            if (err){ reject(err)};
+
+            if(result){
+                resolve(result)
+            } else {
+                reject()
+            }
+            
+        })
+    })
+}
+
+createLikeMark = (userId, postId) => {
+    
+    const sql = "INSERT INTO todo_api.likes (userId, postId, createdAt) VALUES ('" + userId + "','" + postId + "', NOW())";
+    console.log(sql);
+    return new Promise((resolve, reject) => {
+        con.query(sql, (err, result) => {
+            if (err){ reject(err)};
+
+            resolve(result)
+        })
+    })
+}
+
+deleteLike = (userId, postId) => {
+    const sql = "DELETE FROM todo_api.likes WHERE userId = '" + userId + "' AND postId = '" + postId + "'";
+    console.log(sql);
+    return new Promise((resolve, reject) => {
+        con.query(sql, (err, result) => {
+            if (err){ reject(err)};
+
+            resolve(result)
+        })
+    })
+
+}
 module.exports = {
     connect: connect,
     login: login,
@@ -307,6 +343,8 @@ module.exports = {
     listPosts: listPosts,
     listUsers: listUsers,
     likePost: likePost,
+    checkifLiked: checkifLiked,
+    createLikeMark: createLikeMark,
     DeletePost: DeletePost,
     getSingleUser: getSingleUser,
     getSinglePost: getSinglePost,
@@ -315,6 +353,6 @@ module.exports = {
     updateTimeStamp: updateTimeStamp,
     createuserupdate: createuserupdate,
     checkIfUserExists: checkIfUserExists,
-    createNewUser: createNewUser
-
+    createNewUser: createNewUser,
+    deleteLike: deleteLike
 }

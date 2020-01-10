@@ -15,6 +15,18 @@ listAllPosts = () => {
     })
 }
 
+getUsersPosts = (data) => {
+    return new Promise((resolve, reject) => {
+        db.userWithCookie(data).then((user) => {
+            db.listAllUsersPosts(user[0].idUsers).then((data) => {
+                resolve(data);
+            })
+        }).catch((err) => {
+            reject("User not found");
+        })
+    })
+}
+
 getSinglePost = (id) => {
     return new Promise((resolve, reject) => {
 
@@ -60,7 +72,7 @@ submitPost = (data) => {
                 reject(err);
             })
         }).catch((err) => {
-            reject(err);
+            reject("User not found");
         })
     })
 }
@@ -69,7 +81,18 @@ likePost = (data) => {
     return new Promise((resolve, reject) => {
 
         db.userWithCookie(data).then((user) => {
-            db.checkifLiked(data.userId, data.id).then((response) => {
+
+            db.checkIfYourOwn(user[0].idUsers, data.id).then((ownPosts) => {
+                if (ownPosts.length > 0) {
+                    object = {
+                        succes: false,
+                        data: "Cannot post"
+                    }
+                    reject(object)
+                }
+            })
+
+            db.checkifLiked(user[0].idUsers, data.id).then((response) => {
                 if (response.length > 0) {
                     object = {
                         succes: false,
@@ -78,7 +101,7 @@ likePost = (data) => {
                     reject(object)
                 } else {
                     db.likePost(data.id).then((res) => {
-                        
+
                         db.createLikeMark(data.userId, data.id).then((data) => {
                             object = {
                                 succes: true,
@@ -111,7 +134,6 @@ likePost = (data) => {
                 res.send(err);
             })
         }).catch((err) => {
-            console.log("dsadasdasd");
             object = {
                 succes: false,
                 data: "no user found"
@@ -122,17 +144,17 @@ likePost = (data) => {
 }
 
 deleteLike = (data) => {
-    
+
     return new Promise((resolve, reject) => {
         db.userWithCookie(data).then((user) => {
             db.deleteLike(data.userId, data.id)
-            .then((response) => {
-                object = {
-                    succes: true,
-                    data: response
-                }
-                resolve(object)
-            })
+                .then((response) => {
+                    object = {
+                        succes: true,
+                        data: response
+                    }
+                    resolve(object)
+                })
         }).catch((err) => {
             object = {
                 succes: false,
@@ -141,7 +163,7 @@ deleteLike = (data) => {
             reject(object)
         })
     })
-    
+
 }
 
 module.exports = {
@@ -152,5 +174,6 @@ module.exports = {
     getSingleUser: getSingleUser,
     submitPost: submitPost,
     deletePost: deletePost,
-    deleteLike: deleteLike
+    deleteLike: deleteLike,
+    getUsersPosts: getUsersPosts
 }

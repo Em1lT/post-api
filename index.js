@@ -1,6 +1,5 @@
 const express = require('express');
-let session = require('express-session');
-let cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const db = require('./modules/dbModule');
 let loginModule = require('./modules/LoginModule');
 let postModule = require('./modules/postModule');
@@ -12,7 +11,6 @@ const PORT = 3000;
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cookieParser());
-app.use(session({secret: "Shh, its a secret!", maxAge: 10000}));
 
 app.listen(PORT, () => {
     db.connect();
@@ -101,6 +99,15 @@ app.get('/user/:id', (req, res) => {
 
 app.post('/post/like', (req, res) => {
   postModule.likePost(req.body).then((data) => {
+    res.send(data);
+  }).catch((err) => {
+    res.status(400);
+    res.send(err);
+  })
+});
+
+app.post('/posts/user', (req, res) => {
+  postModule.getUsersPosts(req.body).then((data) => {
     res.send(data);
   }).catch((err) => {
     res.status(400);

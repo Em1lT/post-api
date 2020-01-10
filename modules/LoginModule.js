@@ -10,7 +10,7 @@ login = (data) => {
                     succes: true,
                     data: object
                 }
-                object.data[0].cookie = Math.floor(Math.random() * Math.floor(999))
+                object.data[0].cookie = Math.floor(Math.random() * Math.floor(99999999999))
 
                 saveCookieToDb(data.username, object.data[0].cookie)
                     .then(() => {

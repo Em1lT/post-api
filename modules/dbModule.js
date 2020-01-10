@@ -1,12 +1,13 @@
-var mysql = require('mysql');
+require('dotenv').config()
+let mysql = require('mysql');
 let con;
 
 connect = () => {
     con = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "new_password",
-        database: "todo_api"
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB
     });
 
     con.connect(function (err) {
@@ -204,7 +205,7 @@ createNewPost = (user, post) => {
 
 DeletePost = (id) => {
 
-    const sql = "DELETE * FROM todo_api.users WHERE id = '" + id + "'";
+    const sql = "DELETE FROM todo_api.posts WHERE id = '" + id + "'";
     return new Promise((resolve, reject) => {
         con.query(sql, (err, result) => {
             if (err) reject(err);
@@ -310,6 +311,40 @@ checkifLiked = (userId, postId) => {
     })
 }
 
+listAllUsersPosts = (id) => {
+    const sql = "SELECT * FROM todo_api.posts WHERE userId = '" + id + "'";
+    console.log(sql);
+    return new Promise((resolve, reject) => {
+        con.query(sql, (err, result) => {
+            if (err){ reject(err)};
+
+            if(result){
+                resolve(result)
+            } else {
+                reject()
+            }
+            
+        })
+    })
+}
+
+checkIfYourOwn = (userId, postId) => {
+    const sql = "SELECT * FROM todo_api.posts WHERE userId = '" + userId + "' AND id ='" + postId + "'";
+    console.log(sql);
+    return new Promise((resolve, reject) => {
+        con.query(sql, (err, result) => {
+            if (err){ reject(err)};
+
+            if(result){
+                resolve(result)
+            } else {
+                reject()
+            }
+            
+        })
+    })
+}
+
 createLikeMark = (userId, postId) => {
     
     const sql = "INSERT INTO todo_api.likes (userId, postId, createdAt) VALUES ('" + userId + "','" + postId + "', NOW())";
@@ -344,8 +379,10 @@ module.exports = {
     listUsers: listUsers,
     likePost: likePost,
     checkifLiked: checkifLiked,
+    checkIfYourOwn: checkIfYourOwn,
     createLikeMark: createLikeMark,
     DeletePost: DeletePost,
+    listAllUsersPosts: listAllUsersPosts,
     getSingleUser: getSingleUser,
     getSinglePost: getSinglePost,
     findUserName: findUserName,

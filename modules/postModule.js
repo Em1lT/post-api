@@ -166,6 +166,27 @@ deleteLike = (data) => {
 
 }
 
+getAllLikesFromUser = (data) => {
+    return new Promise((resolve, reject) => {
+        db.userWithCookie(data).then((user) => {
+            db.getAllLikesFromPerson(user[0].idUsers)
+            .then((response) => {
+                object = {
+                    succes: true,
+                    data: response
+                }
+                resolve(object)
+            }).catch((err) => {
+                object = {
+                    succes: false,
+                    data: err
+                }
+                reject(object)
+            })
+        })
+    })
+}
+
 module.exports = {
     listAllUser: listAllUser,
     listAllPosts: listAllPosts,
@@ -175,5 +196,6 @@ module.exports = {
     submitPost: submitPost,
     deletePost: deletePost,
     deleteLike: deleteLike,
-    getUsersPosts: getUsersPosts
+    getUsersPosts: getUsersPosts,
+    getAllLikesFromUser: getAllLikesFromUser
 }

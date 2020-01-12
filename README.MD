@@ -13,7 +13,7 @@
 /post/like
 /register
 /delete/like
-/login
+/user/likes
 ```
 
 

@@ -368,8 +368,25 @@ deleteLike = (userId, postId) => {
             resolve(result)
         })
     })
-
 }
+
+getAllLikesFromPerson = (userId, postId) => {
+    const sql = "SELECT * FROM todo_api.likes WHERE userId = '" + userId + "'";
+    console.log(sql);
+    return new Promise((resolve, reject) => {
+        con.query(sql, (err, result) => {
+            if (err){ reject(err)};
+
+            if(result){
+                resolve(result)
+            } else {
+                reject()
+            }
+            
+        })
+    })
+}
+
 module.exports = {
     connect: connect,
     login: login,
@@ -385,6 +402,7 @@ module.exports = {
     listAllUsersPosts: listAllUsersPosts,
     getSingleUser: getSingleUser,
     getSinglePost: getSinglePost,
+    getAllLikesFromPerson: getAllLikesFromPerson,
     findUserName: findUserName,
     userWithCookie: userWithCookie,
     updateTimeStamp: updateTimeStamp,

@@ -6,7 +6,7 @@ let postModule = require('./modules/postModule');
 
 const app = express();
 
-const PORT = 3000;
+const PORT = 3001;
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
@@ -121,6 +121,14 @@ app.post('/testFunctions', (req, res) => {
 
  app.post('/register', (req, res) => {
   loginModule.registerNewUser(req.body).then((data) => {
+    res.send(data);
+  }).catch((err) => {
+    res.send(err);
+  })
+});
+
+app.post('/user/likes', (req, res) => {
+  postModule.getAllLikesFromUser(req.body).then((data) => {
     res.send(data);
   }).catch((err) => {
     res.send(err);
